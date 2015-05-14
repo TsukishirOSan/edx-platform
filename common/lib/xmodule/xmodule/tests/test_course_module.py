@@ -283,6 +283,8 @@ class TeamsConfigurationTestCase(unittest.TestCase):
     """
     Tests for the configuration of teams and the helper methods for accessing them.
     """
+    counter = 0
+
     def setUp(self):
         super(TeamsConfigurationTestCase, self).setUp()
         self.course = get_dummy_course('2012-12-02T12:00')
@@ -292,7 +294,10 @@ class TeamsConfigurationTestCase(unittest.TestCase):
         self.course.teams_configuration = {"max_team_size": max_team_size, "topics": topics}
 
     def make_topic(self):
-        return {"display_name": "Display Name", "description": "Description", "id": "topic_id"}
+        """ Make a sample topic dictionary. """
+        topic_id = "topic_id_{}".format(self.counter)
+        self.counter = self.counter + 1
+        return {"display_name": "Display Name", "description": "Description", "id": topic_id}
 
     def test_teams_enabled_no_teams(self):
         # Make sure we can detect when no teams exist.
@@ -316,6 +321,10 @@ class TeamsConfigurationTestCase(unittest.TestCase):
         self.assertEqual(size, self.course.teams_max_size)
 
     def test_teams_topics_no_teams(self):
+        self.assertIsNone(self.course.teams_topics)
+
+    def test_teams_enabled_no_topics(self):
+        self.add_team_configuration(4)
         self.assertIsNone(self.course.teams_topics)
 
     def test_teams_topics_with_teams(self):

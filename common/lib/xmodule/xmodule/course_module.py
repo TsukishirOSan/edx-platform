@@ -850,7 +850,7 @@ class CourseFields(object):
         display_name=_("Teams Configuration"),
         help=_(
             "Enter policy keys and values to enable the teams feature, define topics, "
-            "or specify the maximum team size."
+            "and specify the maximum team size."
         ),
         scope=Scope.settings
     )
@@ -1430,19 +1430,17 @@ class CourseDescriptor(CourseFields, SequenceDescriptor):
     @property
     def teams_max_size(self):
         """
-        Returns the max size for teams if teams has been configured. Otherwise, returns None.
+        Returns the max size for teams if teams has been configured, else None.
         """
         if self.teams_enabled:
-            try:
-                return self.teams_configuration['max_team_size']
-            except KeyError:
-                return None
+            return self.teams_configuration.get('max_team_size', None)
+        return None
 
     @property
     def teams_topics(self):
         """
-        Returns the topics that have been configured for teams for this course.
+        Returns the topics that have been configured for teams for this course, else None.
         """
         if self.teams_enabled:
-            return self.teams_configuration['topics']
+            return self.teams_configuration.get('topics', None)
         return None
